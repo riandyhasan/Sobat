@@ -1,0 +1,10 @@
+@import url('https://fonts.googleapis.com/css2?family=General+Sans:wght@400;700&display=swap');
+
+html,
+body {
+  padding: 0;
+  margin: 0;
+  font-family: 'General Sans', sans-serif;
+  width: 100%;
+  overflow-x: hidden;
+}
