@@ -23,7 +23,7 @@ const Footer = () => {
     >
       <Container maxWidth="lg">
         <Typography variant="body2" align="center">
-          I'm the footer
+          &#169; Copyright Riandy Hasan 2023
         </Typography>
       </Container>
     </FooterContainer>
