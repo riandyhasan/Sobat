@@ -93,7 +93,7 @@ export default function Obat() {
   }, [query]);
 
   const columns: GridColDef[] = [
-    { field: "nama_obat", headerName: "Nama Obat", minWidth: 350, flex: 1 },
+    { field: "nama_obat", headerName: "Nama Obat", minWidth: 250, flex: 1 },
     {
       field: "jenis",
       headerName: "Jenis",

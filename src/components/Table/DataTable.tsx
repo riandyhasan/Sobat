@@ -37,6 +37,7 @@ export default function DataTable({
         }}
         loading={loading}
         pageSizeOptions={[20, 50, 100]}
+        sx={{ maxWidth: "90vw" }}
       />
     </div>
   );

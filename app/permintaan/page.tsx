@@ -680,10 +680,15 @@ export default function Permintaan() {
               value={selectedDate}
               onChange={(newValue) => setSelectedDate(newValue)}
               format="MM-YYYY"
+              sx={{ maxWidth: "30%" }}
             />
           </DemoContainer>
         </LocalizationProvider>
-        <Button variant="contained" onClick={handleAddModalOpen}>
+        <Button
+          variant="contained"
+          onClick={handleAddModalOpen}
+          sx={{ maxWidth: "30%" }}
+        >
           Tambah Permintaan
         </Button>
       </Box>
