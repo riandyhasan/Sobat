@@ -16,6 +16,23 @@ import {
 } from "firebase/firestore";
 import { db } from "@services/firebase";
 
+export const getObatNoFilter = async (): Promise<Obat[]> => {
+  try {
+    const queryRef = query(collection(db, "obat"), orderBy("index"));
+
+    const querySnapshot = await getDocs(queryRef);
+    const data = querySnapshot.docs.map((doc) => ({
+      id: doc.id,
+      ...doc.data(),
+    })) as Obat[];
+
+    return data as Obat[];
+  } catch (error) {
+    console.log("Error fetching data:", error);
+    return [];
+  }
+};
+
 export const getAllObat = async (
   pageLimit?: number,
   startDoc?: number

@@ -15,11 +15,13 @@ import {
   Toolbar,
   Typography,
   useTheme,
+  Button,
 } from "@mui/material";
 import MenuIcon from "@mui/icons-material/Menu";
 import SobatLogo from "@assets/logo/sobat.png";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { useRouter } from "next/navigation";
+import { logout } from "@services/auth";
 import { MENU_ITEM } from "@data/menu";
 
 const drawerWidth = 240;
@@ -42,7 +44,13 @@ export default function ResponsiveDrawer(props: Props) {
     setMobileOpen(!mobileOpen);
   };
 
+  const handleLogout = async () => {
+    await logout();
+    router.push("/");
+  };
+
   const theme = useTheme();
+  const router = useRouter();
 
   const drawer = (
     <div>
@@ -128,9 +136,25 @@ export default function ResponsiveDrawer(props: Props) {
           >
             <MenuIcon />
           </IconButton>
-          <Typography variant="h6" noWrap component="div">
-            Sistem Manajemen Obat
-          </Typography>
+          <Box
+            sx={{
+              display: "flex",
+              width: "100%",
+              justifyContent: "space-between",
+            }}
+          >
+            <Typography variant="h6" noWrap component="div">
+              Sistem Manajemen Obat
+            </Typography>
+
+            <Button
+              variant="contained"
+              sx={{ background: "red" }}
+              onClick={handleLogout}
+            >
+              Keluar
+            </Button>
+          </Box>
         </Toolbar>
       </AppBar>
       <Box

@@ -67,7 +67,6 @@ export default function Obat() {
       setLoading(true);
       const fetchedData = await getObatByName(query);
       setData(fetchedData);
-      console.log(fetchedData);
       setDataLen(fetchedData.length);
       setPaginationModel({
         page: 0,
@@ -136,6 +135,7 @@ export default function Obat() {
   const handleSubmitEdit = async () => {
     if (!selected) {
       setToastDetail({ type: "error", message: "Mohon lengkapi form" });
+      setOpenToast(true);
       return;
     }
     const idObat = selected.id;
@@ -145,8 +145,9 @@ export default function Obat() {
     };
     const res = await editObat(idObat, editedObat);
     if (res == "success") {
-      setOpenToast(true);
       setToastDetail({ type: "success", message: "Berhasil mengedit obat" });
+      setOpenToast(true);
+
       if (query === "") {
         await fetchObatData();
       } else {
@@ -154,8 +155,8 @@ export default function Obat() {
       }
       setOpen(false);
     } else {
-      setOpenToast(true);
       setToastDetail({ type: "error", message: "Gagal mengedit obat" });
+      setOpenToast(true);
     }
   };
 
