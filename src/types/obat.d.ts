@@ -4,4 +4,11 @@ interface Obat {
   jenis: string;
   subjenis: string;
   stok: number;
+  satuan: string;
+  permintaan: PuskesmasObat[];
+}
+
+interface PuskesmasObat {
+  puskesmas: Puskesmas;
+  jumlah: number;
 }
