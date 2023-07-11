@@ -240,7 +240,7 @@ export default function Permintaan() {
       <div
         style={{
           height: "80vh",
-          width: "100%",
+          width: "90vw",
           overflow: "auto",
           paddingBottom: "5rem",
         }}
@@ -249,7 +249,7 @@ export default function Permintaan() {
           !loading ? (
             <table
               style={{
-                width: "90vw",
+                width: "100%",
                 height: "100%",
                 borderCollapse: "collapse",
                 fontSize: 12,
