@@ -17,6 +17,11 @@ export default function Permintaan() {
   const [obat, setObat] = useState<Obat[]>([]);
   const [permintaan, setPermintaan] = useState<Permintaan[]>([]);
   const [mutasiObat, setMutasiObat] = useState<Obat[]>([]);
+  const [dataLoading, setDataLoading] = useState({
+    obat: true,
+    permintaan: true,
+    puskesmas: true,
+  });
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>();
   const [loading, setLoading] = useState<boolean>(true);
 
@@ -29,13 +34,29 @@ export default function Permintaan() {
   };
 
   const fetchAllPuskesmas = async () => {
+    setDataLoading((prev) => ({
+      ...prev,
+      puskesmas: true,
+    }));
     const res = await getAllPuskesmas();
     setPuskesmas(res);
+    setDataLoading((prev) => ({
+      ...prev,
+      puskesmas: false,
+    }));
   };
 
   const fetchAllObat = async () => {
+    setDataLoading((prev) => ({
+      ...prev,
+      obat: true,
+    }));
     const res = await getObatNoFilter();
     setObat(res);
+    setDataLoading((prev) => ({
+      ...prev,
+      obat: false,
+    }));
   };
 
   const fetchPermintaanByMonth = async () => {
@@ -43,10 +64,18 @@ export default function Permintaan() {
     const theDate = selectedDate.toDate();
 
     if (!(theDate instanceof Date && !isNaN(theDate.getTime()))) return;
+    setDataLoading((prev) => ({
+      ...prev,
+      permintaan: true,
+    }));
     const month = selectedDate.toDate().getMonth();
     const year = selectedDate.toDate().getFullYear();
     const res = await getPermintaanByMonth(month, year);
     setPermintaan(res);
+    setDataLoading((prev) => ({
+      ...prev,
+      permintaan: false,
+    }));
   };
 
   const checkObatPermintaan = async () => {
@@ -164,7 +193,11 @@ export default function Permintaan() {
   }, [selectedDate]);
 
   useEffect(() => {
-    if (obat.length != 0 && puskesmas.length != 0 && permintaan.length != 0) {
+    if (
+      !dataLoading.obat &&
+      !dataLoading.permintaan &&
+      !dataLoading.puskesmas
+    ) {
       setLoading(true);
       checkObatPermintaan();
       setLoading(false);
