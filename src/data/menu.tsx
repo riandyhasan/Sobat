@@ -1,4 +1,9 @@
-import { Medication, LocalPharmacy, Grading } from "@mui/icons-material";
+import {
+  Medication,
+  LocalPharmacy,
+  Grading,
+  Vaccines,
+} from "@mui/icons-material";
 export const MENU_ITEM = [
   {
     menu: "Stok Obat",
@@ -10,6 +15,11 @@ export const MENU_ITEM = [
     icon: <LocalPharmacy />,
     pathname: "/permintaan",
   },
+  // {
+  //   menu: "Penerimaan",
+  //   icon: <Vaccines />,
+  //   pathname: "/penerimaan",
+  // },
   {
     menu: "Rekap",
     icon: <Grading />,

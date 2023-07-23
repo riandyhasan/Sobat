@@ -81,9 +81,7 @@ export default function Permintaan() {
   const checkObatPermintaan = async () => {
     const updatedObat = await Promise.all(
       obat.map(async (o) => {
-        const obatPermintaan = permintaan.filter(
-          (p) => p.obat_id === o.id && p.tipe === "kurang"
-        );
+        const obatPermintaan = permintaan.filter((p) => p.obat_id === o.id);
 
         const checkedPuskesmas: PuskesmasObat[] = await Promise.all(
           puskesmas.map(async (p) => {
@@ -205,7 +203,7 @@ export default function Permintaan() {
   }, [obat, puskesmas, permintaan]);
 
   return (
-    <Grid container minHeight="100vh" direction="column">
+    <Grid container minHeight="100vh" maxWidth="100%" direction="column">
       <Typography variant="h5" component="h2" sx={{ marginBottom: "2rem" }}>
         MUTASI PENGELUARAN IFK
       </Typography>
@@ -240,7 +238,7 @@ export default function Permintaan() {
       <div
         style={{
           height: "80vh",
-          width: "90vw",
+          width: "80vw",
           overflow: "auto",
           paddingBottom: "5rem",
         }}

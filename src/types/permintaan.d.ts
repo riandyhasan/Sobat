@@ -1,6 +1,5 @@
 interface Permintaan {
   id: string;
-  tipe: string;
   jumlah: integer;
   sumber: string;
   sumber_kode: string;

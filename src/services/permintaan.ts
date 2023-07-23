@@ -1,6 +1,7 @@
 import {
   collection,
   getDocs,
+  getDoc,
   query,
   limit,
   startAfter,
@@ -101,7 +102,17 @@ export const addPermintaan = async (
       ...newPermintaan,
       index: allPermintaan + 1,
     };
-    await addDoc(permintaanRef, addedPermintaan);
+    console.log(addedPermintaan);
+    if (addedPermintaan.obat_id) {
+      const obatRef = doc(db, "obat", addedPermintaan?.obat_id);
+      const obatDoc = await getDoc(obatRef);
+      const currentStok = obatDoc?.data()?.stok ?? 0;
+      const updatedStok = currentStok - addedPermintaan.jumlah;
+      await updateDoc(obatRef, { stok: updatedStok });
+      await addDoc(permintaanRef, addedPermintaan);
+    } else {
+      throw Error("Obat tidak ditemukan");
+    }
     return "success";
   } catch (error) {
     console.log("Error adding document:", error);
@@ -114,8 +125,8 @@ export const editPermintaan = async (
   updatedData: Partial<Permintaan>
 ): Promise<string> => {
   try {
-    const obatRef = doc(db, "permintaan", obatId);
-    await updateDoc(obatRef, updatedData);
+    const permintaanRef = doc(db, "permintaan", obatId);
+    await updateDoc(permintaanRef, updatedData);
     return "success";
   } catch (error) {
     console.log("Error updating document:", error);

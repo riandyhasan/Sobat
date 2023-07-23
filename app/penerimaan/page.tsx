@@ -46,7 +46,7 @@ import {
 } from "@utils/converters";
 import RemoveIcon from "@mui/icons-material/Remove";
 
-export default function Permintaan() {
+export default function Penerimaan() {
   const [paginationModel, setPaginationModel] = useState({
     pageSize: 20,
     page: 0,
@@ -433,7 +433,7 @@ export default function Permintaan() {
           }}
         >
           <Typography variant="h5" component="h2" sx={{ marginBottom: "2rem" }}>
-            Tambah Data Permintaan
+            Tambah Data Penerimaan
           </Typography>
           <Box
             component="form"
@@ -446,17 +446,13 @@ export default function Permintaan() {
             noValidate
             autoComplete="off"
           >
-            <Autocomplete
+            <TextField
+              label="Sumber"
               value={sumberAdd}
-              onChange={(event: any, newValue: string | null) => {
-                setSumberAdd(newValue ?? "");
+              onChange={(e) => {
+                setSumberAdd(e.target.value);
               }}
-              disablePortal
-              options={autoCompletePuskesmas.map(
-                (option) => option.nama_puskesmas
-              )}
               sx={{ width: "100%" }}
-              renderInput={(params) => <TextField {...params} label="Sumber" />}
             />
 
             <Button
@@ -529,7 +525,7 @@ export default function Permintaan() {
                             newValue as any;
                           setNewPermintaanList(updatedList);
                         }}
-                        sx={{ width: "80%", marginBottom: 1 }}
+                        sx={{ width: "30%", marginBottom: 1 }}
                       />
                     </DemoContainer>
                   </LocalizationProvider>
@@ -541,7 +537,7 @@ export default function Permintaan() {
                       updatedList.splice(index, 1);
                       setNewPermintaanList(updatedList);
                     }}
-                    sx={{ background: "red", color: "white" }}
+                    sx={{ background: "red", color: "white", fontSize: "1em" }}
                   >
                     <RemoveIcon />
                   </IconButton>
@@ -579,7 +575,7 @@ export default function Permintaan() {
           }}
         >
           <Typography variant="h5" component="h2" sx={{ marginBottom: "2rem" }}>
-            Edit Data Permintaan
+            Edit Data Penerimaan
           </Typography>
           <Box
             component="form"
@@ -695,7 +691,7 @@ export default function Permintaan() {
           fontSize: "2em",
         }}
       >
-        Data Permintaan Obat
+        Data Penerimaan Obat
       </Typography>
       <Box
         sx={{
@@ -720,7 +716,7 @@ export default function Permintaan() {
           onClick={handleAddModalOpen}
           sx={{ maxWidth: "30%" }}
         >
-          Tambah Permintaan
+          Tambah Penerimaan
         </Button>
       </Box>
       <DataTable
