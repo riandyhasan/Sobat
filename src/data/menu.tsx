@@ -15,11 +15,11 @@ export const MENU_ITEM = [
     icon: <LocalPharmacy />,
     pathname: "/permintaan",
   },
-  // {
-  //   menu: "Penerimaan",
-  //   icon: <Vaccines />,
-  //   pathname: "/penerimaan",
-  // },
+  {
+    menu: "Penerimaan",
+    icon: <Vaccines />,
+    pathname: "/penerimaan",
+  },
   {
     menu: "Rekap",
     icon: <Grading />,

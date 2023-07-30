@@ -26,13 +26,13 @@ import DataTable from "@components/Table/DataTable";
 import { editObat, getObatNoFilter } from "@services/obat";
 import { getAllPuskesmas } from "@services/puskesmas";
 import {
-  getAllPermintaan,
-  getPermintaanByMonth,
-  editPermintaan,
-  addPermintaan,
-  getPermintaanLen,
-  deletePermintaan,
-} from "@services/permintaan";
+  getAllPenerimaan,
+  getPenerimaanByMonth,
+  editPenerimaan,
+  addPenerimaan,
+  getPenerimaanLen,
+  deletePenerimaan,
+} from "@services/penerimaan";
 import { DataGrid, GridColDef, GridValueGetterParams } from "@mui/x-data-grid";
 import dayjs, { Dayjs } from "dayjs";
 import { DemoContainer } from "@mui/x-date-pickers/internals/demo";
@@ -52,7 +52,7 @@ export default function Penerimaan() {
     page: 0,
   });
   const [dataLen, setDataLen] = useState(0);
-  const [data, setData] = useState<Permintaan[]>([]);
+  const [data, setData] = useState<Penerimaan[]>([]);
   const [autoCompleteObat, setAutoCompleteObat] = useState<Obat[]>([]);
   const [autoCompletePuskesmas, setAutoCompletePuskesmas] = useState<
     Puskesmas[]
@@ -66,20 +66,19 @@ export default function Penerimaan() {
     type: "success",
     message: "Berhasil mengedit obat",
   });
-  const [selected, setSelected] = useState<Permintaan | null>();
-  const [deleted, setDeleted] = useState<Permintaan | null>();
+  const [selected, setSelected] = useState<Penerimaan | null>();
+  const [deleted, setDeleted] = useState<Penerimaan | null>();
   const [sumberAdd, setSumberAdd] = useState("");
-  const [newPermintaan, setNewPermintaan] = useState<Partial<Permintaan>>({
+  const [newPenerimaan, setNewPenerimaan] = useState<Partial<Penerimaan>>({
     jumlah: 0,
     nama_obat: "",
     obat_id: "",
     sumber: "",
-    sumber_kode: "",
   });
-  const [newPermintaanList, setNewPermintaanList] = useState<
-    Partial<Permintaan>[]
+  const [newPenerimaanList, setNewPenerimaanList] = useState<
+    Partial<Penerimaan>[]
   >([]);
-  const [editPermintaanDate, setEditPermintaanDate] = useState<Dayjs | null>(
+  const [editPenerimaanDate, setEditPenerimaanDate] = useState<Dayjs | null>(
     dayjs()
   );
   const [selectedDate, setSelectedDate] = useState<Dayjs | null>();
@@ -106,18 +105,18 @@ export default function Penerimaan() {
     setDialogOpen(false);
   };
 
-  const fetchPermintaanData = async () => {
+  const fetchPenerimaanData = async () => {
     setLoading(true);
     const { page, pageSize } = paginationModel;
     const start = page * pageSize;
-    const fetchedData = await getAllPermintaan(pageSize, start);
-    const lenData = await getPermintaanLen();
+    const fetchedData = await getAllPenerimaan(pageSize, start);
+    const lenData = await getPenerimaanLen();
     setDataLen(lenData);
     setData(fetchedData);
     setLoading(false);
   };
 
-  const fetchPermintaanByMonth = async () => {
+  const fetchPenerimaanByMonth = async () => {
     if (!selectedDate) return;
     const theDate = selectedDate.toDate();
 
@@ -125,7 +124,7 @@ export default function Penerimaan() {
     setLoading(true);
     const month = selectedDate.toDate().getMonth();
     const year = selectedDate.toDate().getFullYear();
-    const fetchedData = await getPermintaanByMonth(month, year);
+    const fetchedData = await getPenerimaanByMonth(month, year);
     setDataLen(fetchedData.length);
     setData(fetchedData);
     setPaginationModel({
@@ -151,17 +150,17 @@ export default function Penerimaan() {
       !(selectedDate.toDate() instanceof Date) ||
       isNaN(selectedDate.toDate().getTime())
     ) {
-      fetchPermintaanData();
+      fetchPenerimaanData();
     }
   }, [paginationModel, selectedDate]);
 
   useEffect(() => {
-    fetchPermintaanByMonth();
+    fetchPenerimaanByMonth();
   }, [selectedDate]);
 
   useEffect(() => {
     const debounceTimer = setTimeout(() => {
-      fetchPermintaanByMonth();
+      fetchPenerimaanByMonth();
     }, 1000);
 
     return () => clearTimeout(debounceTimer);
@@ -178,7 +177,7 @@ export default function Penerimaan() {
 
   const columns: GridColDef[] = [
     {
-      field: "tanggal_permintaan",
+      field: "tanggal_penerimaan",
       headerName: "Tanggal",
       minWidth: 200,
       flex: 1,
@@ -198,8 +197,8 @@ export default function Penerimaan() {
       renderCell: (params) => {
         const handleEditRow = () => {
           setSelected(params.row);
-          setEditPermintaanDate(
-            dayjs(formatIndonesianDateToISO(params.row.tanggal_permintaan))
+          setEditPenerimaanDate(
+            dayjs(formatIndonesianDateToISO(params.row.tanggal_penerimaan))
           );
           setEditModalOpen(true);
         };
@@ -232,12 +231,12 @@ export default function Penerimaan() {
   const handleSubmitAdd = async () => {
     let allSuccess = true;
 
-    for (const newItem of newPermintaanList) {
+    for (const newItem of newPenerimaanList) {
       if (
         newItem.nama_obat === "" ||
         !newItem.jumlah ||
         sumberAdd === "" ||
-        !newItem.tanggal_permintaan
+        !newItem.tanggal_penerimaan
       ) {
         setToastDetail({ type: "error", message: "Mohon lengkapi form" });
         setOpenToast(true);
@@ -269,17 +268,17 @@ export default function Penerimaan() {
 
       const payload = {
         ...newItem,
-        tanggal_permintaan: new Date(newItem.tanggal_permintaan.toString()),
+        tanggal_penerimaan: new Date(newItem.tanggal_penerimaan.toString()),
         obat_id: selectedObat.id,
         sumber_kode: selectedPuskesmas.kode,
         sumber: selectedPuskesmas.nama_puskesmas,
-      } as Partial<Permintaan>;
+      } as Partial<Penerimaan>;
 
-      const res = await addPermintaan(payload);
+      const res = await addPenerimaan(payload);
       if (res !== "success") {
         setToastDetail({
           type: "error",
-          message: "Gagal menambahkan permintaan",
+          message: "Gagal menambahkan penerimaan",
         });
         setOpenToast(true);
         allSuccess = false;
@@ -290,11 +289,11 @@ export default function Penerimaan() {
     if (allSuccess) {
       setToastDetail({
         type: "success",
-        message: "Berhasil menambahkan permintaan",
+        message: "Berhasil menambahkan penerimaan",
       });
       setOpenToast(true);
-      await fetchPermintaanData();
-      setNewPermintaanList([]);
+      await fetchPenerimaanData();
+      setNewPenerimaanList([]);
       handleCloseAddModal();
     }
   };
@@ -307,7 +306,7 @@ export default function Penerimaan() {
     }
     const idSelected = selected.id;
 
-    if (!editPermintaanDate) {
+    if (!editPenerimaanDate) {
       setToastDetail({ type: "error", message: "Mohon lengkapi form" });
       setOpenToast(true);
       return;
@@ -333,20 +332,20 @@ export default function Penerimaan() {
       return;
     }
 
-    const editedPermintaan = {
+    const editedPenerimaan = {
       nama_obat: selectedObat.nama_obat,
       sumber: selectedPuskesmas.nama_puskesmas,
       jumlah: selected.jumlah,
-      tanggal_permintaan: editPermintaanDate.toDate(),
+      tanggal_penerimaan: editPenerimaanDate.toDate(),
       obat_id: selectedObat.id,
       sumber_kode: selectedPuskesmas.kode,
-    } as Partial<Permintaan>;
+    } as Partial<Penerimaan>;
 
-    const res = await editPermintaan(idSelected, editedPermintaan);
+    const res = await editPenerimaan(idSelected, editedPenerimaan);
     if (res == "success") {
       setOpenToast(true);
       setToastDetail({ type: "success", message: "Berhasil mengedit obat" });
-      await fetchPermintaanData();
+      await fetchPenerimaanData();
       setEditModalOpen(false);
     } else {
       setOpenToast(true);
@@ -360,19 +359,19 @@ export default function Penerimaan() {
       setOpenToast(true);
       return;
     }
-    const idPermintaan = deleted.id;
-    const res = await deletePermintaan(idPermintaan);
+    const idPenerimaan = deleted.id;
+    const res = await deletePenerimaan(idPenerimaan);
     if (res == "success") {
       setOpenToast(true);
       setToastDetail({
         type: "success",
-        message: "Berhasil menghapus permintaan",
+        message: "Berhasil menghapus penerimaan",
       });
-      await fetchPermintaanData();
+      await fetchPenerimaanData();
       handleCloseDialog();
     } else {
       setOpenToast(true);
-      setToastDetail({ type: "error", message: "Gagal menghapus permintaan" });
+      setToastDetail({ type: "error", message: "Gagal menghapus penerimaan" });
     }
   };
 
@@ -397,10 +396,10 @@ export default function Penerimaan() {
       </Snackbar>
 
       <Dialog open={isDialogOpen} onClose={handleCloseDialog}>
-        <DialogTitle>{"Apakah yakin ingin menghapus permintaan?"}</DialogTitle>
+        <DialogTitle>{"Apakah yakin ingin menghapus penerimaan?"}</DialogTitle>
         <DialogContent>
           <DialogContentText>
-            Anda akan menghapus permintaan ini
+            Anda akan menghapus penerimaan ini
           </DialogContentText>
         </DialogContent>
         <DialogActions sx={{ paddingBottom: "1rem", paddingRight: "1rem" }}>
@@ -458,16 +457,19 @@ export default function Penerimaan() {
             <Button
               variant="contained"
               onClick={() => {
-                setNewPermintaanList((prevList) => [
+                setNewPenerimaanList((prevList) => [
                   ...prevList,
                   {
                     jumlah: 0,
                     nama_obat: "",
                     obat_id: "",
                     sumber: "",
-                    sumber_kode: "",
-                    tanggal_permintaan: null as any,
-                  } as Partial<Permintaan>,
+                    batch: "",
+                    faktur: "",
+                    tanggal_kadaluarsa: null as any,
+                    tanggal_penerimaan: null as any,
+                    harga_obat: 0,
+                  } as Partial<Penerimaan>,
                 ]);
               }}
             >
@@ -475,7 +477,7 @@ export default function Penerimaan() {
             </Button>
 
             <Box>
-              {newPermintaanList.map((item, index) => (
+              {newPenerimaanList.map((item, index) => (
                 <Box
                   key={index}
                   sx={{
@@ -485,16 +487,38 @@ export default function Penerimaan() {
                     alignItems: "center",
                   }}
                 >
+                  <TextField
+                    label="Nomor Batch"
+                    value={item.batch}
+                    onChange={(e) => {
+                      const updatedList = [...newPenerimaanList];
+                      updatedList[index].batch = e.target.value;
+                      setNewPenerimaanList(updatedList);
+                    }}
+                    sx={{ width: "15%" }}
+                  />
+
+                  <TextField
+                    label="Nomor Faktur"
+                    value={item.faktur}
+                    onChange={(e) => {
+                      const updatedList = [...newPenerimaanList];
+                      updatedList[index].faktur = e.target.value;
+                      setNewPenerimaanList(updatedList);
+                    }}
+                    sx={{ width: "15%" }}
+                  />
+
                   <Autocomplete
                     value={item.nama_obat}
                     onChange={(event: any, newValue: string | null) => {
-                      const updatedList = [...newPermintaanList];
+                      const updatedList = [...newPenerimaanList];
                       updatedList[index].nama_obat = newValue ?? "";
-                      setNewPermintaanList(updatedList);
+                      setNewPenerimaanList(updatedList);
                     }}
                     disablePortal
                     options={autoCompleteObat.map((option) => option.nama_obat)}
-                    sx={{ width: "50%" }}
+                    sx={{ width: "25%" }}
                     renderInput={(params) => (
                       <TextField {...params} label="Nama Obat" />
                     )}
@@ -505,37 +529,73 @@ export default function Penerimaan() {
                     value={item.jumlah}
                     onChange={(e) => {
                       const parsedValue = parseInt(e.target.value);
-                      const updatedList = [...newPermintaanList];
+                      const updatedList = [...newPenerimaanList];
                       updatedList[index].jumlah = isNaN(parsedValue)
                         ? 0
                         : parsedValue;
-                      setNewPermintaanList(updatedList);
+                      setNewPenerimaanList(updatedList);
                     }}
-                    sx={{ width: "20%" }}
+                    sx={{ width: "10%" }}
                   />
 
                   <LocalizationProvider dateAdapter={AdapterDayjs}>
-                    <DemoContainer components={["DatePicker"]}>
+                    <DemoContainer
+                      components={["DatePicker"]}
+                      sx={{ width: "20%" }}
+                    >
                       <DatePicker
-                        label="Tanggal Permintaan"
-                        value={item.tanggal_permintaan}
+                        label="Tanggal Diterima"
+                        value={item.tanggal_penerimaan}
                         onChange={(newValue) => {
-                          const updatedList = [...newPermintaanList];
-                          updatedList[index].tanggal_permintaan =
+                          const updatedList = [...newPenerimaanList];
+                          updatedList[index].tanggal_penerimaan =
                             newValue as any;
-                          setNewPermintaanList(updatedList);
+                          setNewPenerimaanList(updatedList);
                         }}
-                        sx={{ width: "30%", marginBottom: 1 }}
+                        sx={{ marginBottom: 1 }}
                       />
                     </DemoContainer>
                   </LocalizationProvider>
 
+                  <LocalizationProvider dateAdapter={AdapterDayjs}>
+                    <DemoContainer
+                      components={["DatePicker"]}
+                      sx={{ width: "20%" }}
+                    >
+                      <DatePicker
+                        label="Tanggal ED"
+                        value={item.tanggal_kadaluarsa}
+                        onChange={(newValue) => {
+                          const updatedList = [...newPenerimaanList];
+                          updatedList[index].tanggal_kadaluarsa =
+                            newValue as any;
+                          setNewPenerimaanList(updatedList);
+                        }}
+                        sx={{ marginBottom: 1 }}
+                      />
+                    </DemoContainer>
+                  </LocalizationProvider>
+
+                  <TextField
+                    label="Harga"
+                    value={item.harga_obat}
+                    onChange={(e) => {
+                      const parsedValue = parseInt(e.target.value);
+                      const updatedList = [...newPenerimaanList];
+                      updatedList[index].harga_obat = isNaN(parsedValue)
+                        ? 0
+                        : parsedValue;
+                      setNewPenerimaanList(updatedList);
+                    }}
+                    sx={{ width: "15%" }}
+                  />
+
                   {/* Remove button */}
                   <IconButton
                     onClick={() => {
-                      const updatedList = [...newPermintaanList];
+                      const updatedList = [...newPenerimaanList];
                       updatedList.splice(index, 1);
-                      setNewPermintaanList(updatedList);
+                      setNewPenerimaanList(updatedList);
                     }}
                     sx={{ background: "red", color: "white", fontSize: "1em" }}
                   >
@@ -591,9 +651,9 @@ export default function Penerimaan() {
             <LocalizationProvider dateAdapter={AdapterDayjs}>
               <DemoContainer components={["DatePicker"]}>
                 <DatePicker
-                  label="Tanggal Permintaan"
-                  value={editPermintaanDate}
-                  onChange={(newValue) => setEditPermintaanDate(newValue)}
+                  label="Tanggal Penerimaan"
+                  value={editPenerimaanDate}
+                  onChange={(newValue) => setEditPenerimaanDate(newValue)}
                   sx={{ width: "100%" }}
                   format="DD MMMM YYYY"
                 />
