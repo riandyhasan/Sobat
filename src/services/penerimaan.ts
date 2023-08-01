@@ -102,7 +102,6 @@ export const addPenerimaan = async (
       ...newPenerimaan,
       index: allPenerimaan + 1,
     };
-    console.log(addedPenerimaan);
     if (addedPenerimaan.obat_id) {
       const obatRef = doc(db, "obat", addedPenerimaan?.obat_id);
       const obatDoc = await getDoc(obatRef);

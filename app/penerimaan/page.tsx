@@ -255,23 +255,21 @@ export default function Penerimaan() {
         break;
       }
 
-      const selectedPuskesmas = autoCompletePuskesmas.find(
-        (puskesmas) => puskesmas.nama_puskesmas === sumberAdd
-      );
+      // const selectedPuskesmas = autoCompletePuskesmas.find(
+      //   (puskesmas) => puskesmas.nama_puskesmas === sumberAdd
+      // );
 
-      if (!selectedPuskesmas) {
-        setToastDetail({ type: "error", message: "Obat tidak valid" });
-        setOpenToast(true);
-        allSuccess = false;
-        break;
-      }
+      // if (!selectedPuskesmas) {
+      //   setToastDetail({ type: "error", message: "Obat tidak valid" });
+      //   setOpenToast(true);
+      //   allSuccess = false;
+      //   break;
+      // }
 
       const payload = {
         ...newItem,
         tanggal_penerimaan: new Date(newItem.tanggal_penerimaan.toString()),
         obat_id: selectedObat.id,
-        sumber_kode: selectedPuskesmas.kode,
-        sumber: selectedPuskesmas.nama_puskesmas,
       } as Partial<Penerimaan>;
 
       const res = await addPenerimaan(payload);
